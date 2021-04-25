@@ -1,0 +1,54 @@
+# https://docs.camunda.org/manual/latest/user-guide/spring-boot-integration/configuration/#camunda-engine-properties
+camunda.bpm:
+  run:
+    cors:
+      enabled: true
+      allowed-origins:
+  admin-user:
+    id: ${ADMIN_USER:demo}
+    password: ${ADMIN_PASSWORD:demo}
+    firstName: Demo
+# https://docs.camunda.org/manual/latest/user-guide/security/#authorization
+# https://docs.camunda.org/manual/latest/user-guide/process-engine/authorization-service/
+  authorization:
+    enabled: false
+# custom code in deployments is an accepted risk
+    enabled-for-custom-code: true
+# revocation support should only be enabled when required
+    authorization-check-revokes: false
+  database:
+    type: ${DB_TYPE:postgres}
+  filter:
+    create: All tasks
+  generic-properties:
+    properties:
+# https://docs.camunda.org/manual/latest/user-guide/security/#variable-values-from-untrusted-sources
+      deserialization-type-validation-enabled: true
+      deserialization-allowed-packages:
+      deserialization-allowed-classes:
+# https://docs.camunda.org/manual/latest/user-guide/security/#http-header-security-in-webapps
+# https://docs.camunda.org/manual/latest/webapps/shared-options/header-security/
+  webapp.csrf:
+    enable-same-site-cookie: true
+    same-site-cookie-option: STRICT
+
+server:
+  port: ${HTTP_PORT:8080}
+  use-forward-headers: true
+# https://docs.camunda.org/manual/latest/user-guide/security/#http-header-security-in-webapps
+# https://docs.camunda.org/manual/latest/webapps/shared-options/header-security/
+  servlet.session.cookie:
+    secure: ${COOKIE_SECURE:false}
+    http-only: true
+  max-http-header-size: 8KB
+
+logging.level:
+  root: ${LOG_LEVEL:INFO}
+  com.example.camunda: ${LOG_LEVEL:INFO}
+  org.springframework.web: ${LOG_LEVEL:INFO}
+
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}

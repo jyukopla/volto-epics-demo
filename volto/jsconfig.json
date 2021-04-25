@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "paths": {
+          "volto-epics-addon": [
+             "addons/volto-epics-addon/src"
+          ]
+        },
+        "baseUrl": "src"
+    }
+}

@@ -1,0 +1,72 @@
+version: '3'
+
+services:
+# ploneapi:
+#   image: kitconcept/plone.restapi:latest
+#   ports:
+#     - "8080:8080"
+#   # Uncomment if you need the data to be persistent
+#   # volumes:
+#   #   - ./data/:/data/
+  postgres:
+    build: ./fixture/postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MULTIPLE_DATABASES: camunda,keycloak
+  vault:
+    image: vault
+    ports:
+      - "8200:8200"
+    cap_add:
+      - IPC_LOCK
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: admin
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+  camunda:
+    build: ./camunda
+    ports:
+      - 8082:8080
+    depends_on:
+      - postgres
+    environment:
+      HTTP_PORT: "8080"
+      DB_TYPE: postgres
+      DB_DRIVER: org.postgresql.Driver
+      DB_URL: jdbc:postgresql://postgres:5432/camunda
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      WAIT_FOR_HOST: postgres
+      WAIT_FOR_PORT: "5432"
+      COOKIE_SECURE: "false"
+      MAIL_HOST: mailhog
+      MAIL_PORT: "1025"
+      MAIL_AUTH: "false"
+      MAIL_SSL: "false"
+      MAIL_SENDER: noreply@example.com
+  keycloak:
+    image: jboss/keycloak
+    ports:
+      - 8081:8080
+    depends_on:
+      - postgres
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_PORT: 5432
+      DB_DATABASE: keycloak
+      DB_USER: postgres
+      DB_SCHEMA: public
+      DB_PASSWORD: postgres
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_IMPORT: /tmp/example-realm.json
+    volumes:
+      - ./fixture/keycloak/realm-export.json:/tmp/example-realm.json

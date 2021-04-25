@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0o72kt5" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.14.0">
+  <bpmn:process id="world-plone-day-new-event" name="World Plone Day : New event" isExecutable="true" camunda:historyTimeToLive="P365D">
+    <bpmn:startEvent id="StartEvent_1" name="Create event">
+      <bpmn:outgoing>Flow_0po4ehs</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0po4ehs" sourceRef="StartEvent_1" targetRef="Gateway_1brd61s" />
+    <bpmn:sequenceFlow id="Flow_01v4u5l" sourceRef="wpdEventForm" targetRef="Activity_0ikzsxl" />
+    <bpmn:endEvent id="Event_1clojgt" name="Event created">
+      <bpmn:incoming>Flow_12r1e9x</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_12r1e9x" sourceRef="Activity_0ikzsxl" targetRef="Event_1clojgt" />
+    <bpmn:userTask id="wpdEventForm" name="Submit form">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="title" type="string" />
+          <camunda:formField id="description" type="string" />
+          <camunda:formField id="start" type="string" />
+          <camunda:formField id="end" type="string" />
+        </camunda:formData>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="errorMessage" />
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1gtfdab</bpmn:incoming>
+      <bpmn:outgoing>Flow_01v4u5l</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Activity_0ikzsxl" name="Call API" camunda:type="external" camunda:topic="wpd.event.create">
+      <bpmn:incoming>Flow_01v4u5l</bpmn:incoming>
+      <bpmn:outgoing>Flow_12r1e9x</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_0bvtkco" name="Cancel" attachedToRef="wpdEventForm">
+      <bpmn:outgoing>Flow_0rm2lc8</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1eh3whu" messageRef="Message_1qp22gk" />
+    </bpmn:boundaryEvent>
+    <bpmn:endEvent id="Event_06e6vch" name="Cancelled">
+      <bpmn:incoming>Flow_0rm2lc8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0rm2lc8" sourceRef="Event_0bvtkco" targetRef="Event_06e6vch" />
+    <bpmn:boundaryEvent id="Event_1uwl1eq" name="Error" attachedToRef="Activity_0ikzsxl">
+      <bpmn:outgoing>Flow_0bwv3z6</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1li82he" camunda:errorCodeVariable="errorCode" camunda:errorMessageVariable="errorMessage" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_0bwv3z6" sourceRef="Event_1uwl1eq" targetRef="Gateway_1brd61s" />
+    <bpmn:exclusiveGateway id="Gateway_1brd61s">
+      <bpmn:incoming>Flow_0po4ehs</bpmn:incoming>
+      <bpmn:incoming>Flow_0bwv3z6</bpmn:incoming>
+      <bpmn:outgoing>Flow_1gtfdab</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1gtfdab" sourceRef="Gateway_1brd61s" targetRef="wpdEventForm" />
+  </bpmn:process>
+  <bpmn:message id="Message_1qp22gk" name="create-event-cancel" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="world-plone-day-new-event">
+      <bpmndi:BPMNEdge id="Flow_0po4ehs_di" bpmnElement="Flow_0po4ehs">
+        <di:waypoint x="208" y="187" />
+        <di:waypoint x="253" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01v4u5l_di" bpmnElement="Flow_01v4u5l">
+        <di:waypoint x="453" y="187" />
+        <di:waypoint x="503" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12r1e9x_di" bpmnElement="Flow_12r1e9x">
+        <di:waypoint x="603" y="187" />
+        <di:waypoint x="652" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rm2lc8_di" bpmnElement="Flow_0rm2lc8">
+        <di:waypoint x="403" y="245" />
+        <di:waypoint x="403" y="310" />
+        <di:waypoint x="652" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bwv3z6_di" bpmnElement="Flow_0bwv3z6">
+        <di:waypoint x="553" y="129" />
+        <di:waypoint x="553" y="80" />
+        <di:waypoint x="278" y="80" />
+        <di:waypoint x="278" y="162" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gtfdab_di" bpmnElement="Flow_1gtfdab">
+        <di:waypoint x="303" y="187" />
+        <di:waypoint x="353" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1clojgt_di" bpmnElement="Event_1clojgt" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="652" y="169" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="636" y="212" width="68" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_06e6vch_di" bpmnElement="Event_06e6vch" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="652" y="292" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="646" y="335" width="49" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="172" y="169" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="159" y="212" width="63" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1brd61s_di" bpmnElement="Gateway_1brd61s" isMarkerVisible="true">
+        <dc:Bounds x="253" y="162" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0h379zu_di" bpmnElement="wpdEventForm">
+        <dc:Bounds x="353" y="147" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08047r8_di" bpmnElement="Activity_0ikzsxl">
+        <dc:Bounds x="503" y="147" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1v509qq_di" bpmnElement="Event_0bvtkco" bioc:stroke="#000" bioc:fill="#fff">
+        <dc:Bounds x="385" y="209" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="346" y="243" width="34" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0238fy8_di" bpmnElement="Event_1uwl1eq">
+        <dc:Bounds x="535" y="129" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="577" y="123" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

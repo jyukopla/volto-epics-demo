@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_DB=camunda
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  camunda:
+    build: ./camunda
+    ports:
+      - 8081:8080
+    depends_on:
+      - postgres
+    environment:
+      - DB_URL=jdbc:postgresql://postgres:5432/camunda
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+
+  plone:
+    image: plone
+    ports:
+      - 8080:8080
+    environment:
+      - SITE=Plone
+      - ADDONS=kitconcept.volto
+      - ZCML=kitconcept.volto.cors
+      - PROFILES=kitconcept.volto:default-homepage
+
+  process-api:
+    build: process-api
+    ports:
+      - 8000:8000
+    environment:
+      - CAMUNDA_API_PATH=http://camunda:8080/engine-rest
+      - PLONE_API_PATH=http://plone:8080/Plone
+
+  volto:
+    build: volto
+    ports:
+      - 3000:3000
+      - 3001:3001
+    environment:
+      - PROCESS_API_PATH=http://process-api:8000
+      - RAZZLE_API_PATH=http://localhost:8080/Plone
+      - RAZZLE_INTERNAL_API_PATH=http://plone:8080/Plone

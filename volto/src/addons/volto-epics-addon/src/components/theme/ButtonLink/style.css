@@ -1,0 +1,17 @@
+.ui.button.basic.link {
+  padding: 0;
+  box-shadow: 0 0 !important;
+  margin: 0;
+  font-size: inherit;
+  text-decoration: underline;
+}
+
+.ui.button.basic.link:hover {
+  text-decoration: none;
+}
+
+.ui.button.basic.link:focus {
+  outline-style: dotted;
+  outline-width: 1px;
+  text-decoration: none;
+}

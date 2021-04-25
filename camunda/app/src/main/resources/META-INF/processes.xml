@@ -1,0 +1,16 @@
+<process-application
+  xmlns="http://www.camunda.org/schema/1.0/ProcessApplication"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <process-archive name="World Plone Day">
+    <process-engine>default</process-engine>
+    <resource>world-plone-day.bpmn</resource>
+    <resource>world-plone-day-new-event.bpmn</resource>
+    <properties>
+      <property name="isDeployChangedOnly">true</property>
+      <property name="isDeleteUponUndeploy">false</property>
+      <property name="isScanForProcessDefinitions">false</property>
+    </properties>
+  </process-archive>
+
+</process-application>

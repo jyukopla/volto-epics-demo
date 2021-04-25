@@ -1,0 +1,7 @@
+graft src
+graft tests
+include *.py *.nix *.cfg *.txt *.rst
+exclude *.pyc Makefile* *.yml *.patch
+prune fixtures
+prune docs
+prune tests/__pycache__

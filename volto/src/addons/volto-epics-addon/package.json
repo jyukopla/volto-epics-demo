@@ -1,0 +1,16 @@
+{
+  "name": "volto-epics-addon",
+  "version": "1.0.0",
+  "description": "Volto Business Process API Add-On",
+  "main": "src/index.js",
+  "author": "JYU",
+  "license": "EUPL-1.2",
+  "keywords": [
+    "volto-addon",
+    "volto",
+    "plone",
+    "react"
+  ],
+  "dependencies": {
+  }
+}
